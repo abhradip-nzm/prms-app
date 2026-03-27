@@ -13,7 +13,9 @@ import TenantDashboard from './pages/tenant/TenantDashboard';
 import TenantLease from './pages/tenant/TenantLease';
 import TenantPayments from './pages/tenant/TenantPayments';
 import TenantMaintenance from './pages/tenant/TenantMaintenance';
+import TenantMessages from './pages/tenant/TenantMessages';
 import ContractorDashboard from './pages/contractor/ContractorDashboard';
+import ContractorJobs from './pages/contractor/ContractorJobs';
 import ContractorInvoices from './pages/contractor/ContractorInvoices';
 import FinanceDashboard from './pages/finance/FinanceDashboard';
 import { TenantsPage, NotificationsPage, ViewingSchedulerPage, RentTrackingPage } from './pages/shared/SharedPages';
@@ -25,44 +27,63 @@ function ProtectedRoute({ children, allowedRoles }) {
   return children;
 }
 
+function R(roles, el) {
+  return <ProtectedRoute allowedRoles={roles}>{el}</ProtectedRoute>;
+}
+
 function AppRoutes() {
   const { currentUser } = useApp();
   return (
     <Routes>
       <Route path="/login" element={currentUser ? <Navigate to={`/${currentUser.role}/dashboard`} /> : <LoginPage />} />
       <Route path="/" element={<Navigate to="/login" replace />} />
-      <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
-      <Route path="/admin/leads" element={<ProtectedRoute allowedRoles={['admin']}><LeadsPage /></ProtectedRoute>} />
-      <Route path="/admin/leasing" element={<ProtectedRoute allowedRoles={['admin']}><LeasingPage /></ProtectedRoute>} />
-      <Route path="/admin/maintenance" element={<ProtectedRoute allowedRoles={['admin']}><MaintenancePage /></ProtectedRoute>} />
-      <Route path="/admin/accounting" element={<ProtectedRoute allowedRoles={['admin']}><AccountingPage /></ProtectedRoute>} />
-      <Route path="/admin/reports" element={<ProtectedRoute allowedRoles={['admin']}><ReportsPage /></ProtectedRoute>} />
-      <Route path="/admin/properties" element={<ProtectedRoute allowedRoles={['admin']}><PropertiesPage /></ProtectedRoute>} />
-      <Route path="/admin/units" element={<ProtectedRoute allowedRoles={['admin']}><UnitsPage /></ProtectedRoute>} />
-      <Route path="/admin/tenants" element={<ProtectedRoute allowedRoles={['admin']}><TenantsPage /></ProtectedRoute>} />
-      <Route path="/admin/notifications" element={<ProtectedRoute allowedRoles={['admin']}><NotificationsPage /></ProtectedRoute>} />
-      <Route path="/manager/dashboard" element={<ProtectedRoute allowedRoles={['manager']}><ManagerDashboard /></ProtectedRoute>} />
-      <Route path="/manager/leads" element={<ProtectedRoute allowedRoles={['manager']}><LeadsPage /></ProtectedRoute>} />
-      <Route path="/manager/viewing" element={<ProtectedRoute allowedRoles={['manager']}><ViewingSchedulerPage /></ProtectedRoute>} />
-      <Route path="/manager/leasing" element={<ProtectedRoute allowedRoles={['manager']}><LeasingPage /></ProtectedRoute>} />
-      <Route path="/manager/tenants" element={<ProtectedRoute allowedRoles={['manager']}><TenantsPage /></ProtectedRoute>} />
-      <Route path="/manager/maintenance" element={<ProtectedRoute allowedRoles={['manager']}><MaintenancePage /></ProtectedRoute>} />
-      <Route path="/manager/rent" element={<ProtectedRoute allowedRoles={['manager']}><RentTrackingPage /></ProtectedRoute>} />
-      <Route path="/manager/reports" element={<ProtectedRoute allowedRoles={['manager']}><ReportsPage /></ProtectedRoute>} />
-      <Route path="/tenant/dashboard" element={<ProtectedRoute allowedRoles={['tenant']}><TenantDashboard /></ProtectedRoute>} />
-      <Route path="/tenant/lease" element={<ProtectedRoute allowedRoles={['tenant']}><TenantLease /></ProtectedRoute>} />
-      <Route path="/tenant/payments" element={<ProtectedRoute allowedRoles={['tenant']}><TenantPayments /></ProtectedRoute>} />
-      <Route path="/tenant/maintenance" element={<ProtectedRoute allowedRoles={['tenant']}><TenantMaintenance /></ProtectedRoute>} />
-      <Route path="/tenant/requests" element={<ProtectedRoute allowedRoles={['tenant']}><TenantMaintenance /></ProtectedRoute>} />
-      <Route path="/tenant/messages" element={<ProtectedRoute allowedRoles={['tenant']}><TenantDashboard /></ProtectedRoute>} />
-      <Route path="/contractor/dashboard" element={<ProtectedRoute allowedRoles={['contractor']}><ContractorDashboard /></ProtectedRoute>} />
-      <Route path="/contractor/jobs" element={<ProtectedRoute allowedRoles={['contractor']}><ContractorDashboard /></ProtectedRoute>} />
-      <Route path="/contractor/invoices" element={<ProtectedRoute allowedRoles={['contractor']}><ContractorInvoices /></ProtectedRoute>} />
-      <Route path="/finance/dashboard" element={<ProtectedRoute allowedRoles={['finance']}><FinanceDashboard /></ProtectedRoute>} />
-      <Route path="/finance/invoices" element={<ProtectedRoute allowedRoles={['finance']}><AccountingPage /></ProtectedRoute>} />
-      <Route path="/finance/rentroll" element={<ProtectedRoute allowedRoles={['finance']}><FinanceDashboard /></ProtectedRoute>} />
-      <Route path="/finance/maintenance-costs" element={<ProtectedRoute allowedRoles={['finance']}><FinanceDashboard /></ProtectedRoute>} />
-      <Route path="/finance/reports" element={<ProtectedRoute allowedRoles={['finance']}><ReportsPage /></ProtectedRoute>} />
+
+      {/* ── ADMIN ── */}
+      <Route path="/admin/dashboard"      element={R(['admin'], <AdminDashboard />)} />
+      <Route path="/admin/leads"          element={R(['admin'], <LeadsPage />)} />
+      <Route path="/admin/leasing"        element={R(['admin'], <LeasingPage />)} />
+      <Route path="/admin/maintenance"    element={R(['admin'], <MaintenancePage />)} />
+      <Route path="/admin/accounting"     element={R(['admin'], <AccountingPage />)} />
+      <Route path="/admin/reports"        element={R(['admin'], <ReportsPage />)} />
+      <Route path="/admin/properties"     element={R(['admin'], <PropertiesPage />)} />
+      <Route path="/admin/units"          element={R(['admin'], <UnitsPage />)} />
+      <Route path="/admin/tenants"        element={R(['admin'], <TenantsPage />)} />
+      <Route path="/admin/notifications"  element={R(['admin'], <NotificationsPage />)} />
+
+      {/* ── MANAGER ── */}
+      <Route path="/manager/dashboard"       element={R(['manager'], <ManagerDashboard />)} />
+      <Route path="/manager/leads"           element={R(['manager'], <LeadsPage />)} />
+      <Route path="/manager/viewing"         element={R(['manager'], <ViewingSchedulerPage />)} />
+      <Route path="/manager/leasing"         element={R(['manager'], <LeasingPage />)} />
+      <Route path="/manager/tenants"         element={R(['manager'], <TenantsPage />)} />
+      <Route path="/manager/maintenance"     element={R(['manager'], <MaintenancePage />)} />
+      <Route path="/manager/rent"            element={R(['manager'], <RentTrackingPage />)} />
+      <Route path="/manager/reports"         element={R(['manager'], <ReportsPage />)} />
+      <Route path="/manager/notifications"   element={R(['manager'], <NotificationsPage />)} />
+
+      {/* ── TENANT ── */}
+      <Route path="/tenant/dashboard"       element={R(['tenant'], <TenantDashboard />)} />
+      <Route path="/tenant/lease"           element={R(['tenant'], <TenantLease />)} />
+      <Route path="/tenant/payments"        element={R(['tenant'], <TenantPayments />)} />
+      <Route path="/tenant/maintenance"     element={R(['tenant'], <TenantMaintenance />)} />
+      <Route path="/tenant/requests"        element={R(['tenant'], <TenantMaintenance />)} />
+      <Route path="/tenant/messages"        element={R(['tenant'], <TenantMessages />)} />
+      <Route path="/tenant/notifications"   element={R(['tenant'], <NotificationsPage />)} />
+
+      {/* ── CONTRACTOR ── */}
+      <Route path="/contractor/dashboard"     element={R(['contractor'], <ContractorDashboard />)} />
+      <Route path="/contractor/jobs"          element={R(['contractor'], <ContractorJobs />)} />
+      <Route path="/contractor/invoices"      element={R(['contractor'], <ContractorInvoices />)} />
+      <Route path="/contractor/notifications" element={R(['contractor'], <NotificationsPage />)} />
+
+      {/* ── FINANCE ── */}
+      <Route path="/finance/dashboard"          element={R(['finance'], <FinanceDashboard />)} />
+      <Route path="/finance/invoices"           element={R(['finance'], <AccountingPage />)} />
+      <Route path="/finance/rentroll"           element={R(['finance'], <FinanceDashboard />)} />
+      <Route path="/finance/maintenance-costs"  element={R(['finance'], <FinanceDashboard />)} />
+      <Route path="/finance/reports"            element={R(['finance'], <ReportsPage />)} />
+      <Route path="/finance/notifications"      element={R(['finance'], <NotificationsPage />)} />
+
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );

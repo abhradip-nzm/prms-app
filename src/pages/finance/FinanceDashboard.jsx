@@ -4,9 +4,17 @@ import Topbar from '../../components/layout/Topbar';
 import { INVOICES, LEASES, RENT_TRENDS, MAINTENANCE_COSTS } from '../../data';
 import { DollarSign, TrendingUp, AlertCircle, CheckCircle, Download } from 'lucide-react';
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
+function getInitialTab(pathname) {
+  if (pathname.includes('rentroll'))          return 'rentroll';
+  if (pathname.includes('maintenance-costs')) return 'maintenance';
+  return 'overview';
+}
 
 export default function FinanceDashboard() {
-  const [tab, setTab] = useState('overview');
+  const location = useLocation();
+  const [tab, setTab] = useState(() => getInitialTab(location.pathname));
   const totalDue = INVOICES.filter(i => i.status !== 'paid').reduce((s, i) => s + i.amount, 0);
   const totalPaid = INVOICES.filter(i => i.status === 'paid').reduce((s, i) => s + i.amount, 0);
   const overdue = INVOICES.filter(i => i.status === 'overdue');
